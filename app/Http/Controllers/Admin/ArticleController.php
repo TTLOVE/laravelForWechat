@@ -41,7 +41,7 @@ class ArticleController extends Controller
         *
         * @param $request
         *
-        * @return 
+        * @return  页面
      */
     public function pageGet(Request $request)
     {
