@@ -30,7 +30,31 @@ class ArticleController extends Controller
     {
         $articleList = $this->getArticleList($this->channelId);
         $userGroupList = $this->getUserGroupList($this->channelId);
-        return view('admin/article/index')->withArticles($articleList['item'])->withUserGroup($userGroupList['groups']);
+        $pageNum = 1;
+        $pagePre = $pageNum - 1;
+        $pageNext = $pageNum + 1;
+        return view('admin/article/index')->withArticles($articleList['item'])->withUserGroup($userGroupList['groups'])->withPagePre($pagePre)->withPageNext($pageNext);
+    }
+
+    /**
+        * 获取列表
+        *
+        * @param $request
+        *
+        * @return 
+     */
+    public function pageGet(Request $request)
+    {
+        $pageNum = $request->get('page');
+        $offset = ($pageNum-1) * 10;
+        // 获取列表
+        $userGroupList = $this->getUserGroupList($this->channelId);
+        $articleList = $this->getArticleList($this->channelId, $offset);
+
+        $pagePre = $pageNum - 1;
+        $pageNext = $pageNum + 1;
+        return view('admin/article/index')->withArticles($articleList['item'])->withUserGroup($userGroupList['groups'])->withPagePre($pagePre)->withPageNext($pageNext);
+
     }
 
     /**
@@ -157,10 +181,11 @@ class ArticleController extends Controller
         *
         * @param $channelId 渠道id
         * @param $offset 查询开始数
+        * @param $limit 每次读取数量
         *
         * @return array
      */
-    private function getArticleList($channelId, $offset=0)
+    private function getArticleList($channelId, $offset=0, $limit=10)
     {
         $wechatToken = $this->getWechatToken($channelId);
         $returnData = array(
@@ -178,7 +203,7 @@ class ArticleController extends Controller
         $postData = [
             'type' => 'news',
             'offset' => $offset,
-            'count' => 20
+            'count' => $limit
         ];
         $response = Curl::to($listUrl)
             ->withData($postData)

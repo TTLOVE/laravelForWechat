@@ -34,6 +34,24 @@
                         </form>
                     @endforeach
 
+                    <br>
+                    <div style="margin-top: 40px;">
+                        @if ($page_pre>0)
+                        <form action="{{ url('admin/article/pageGet') }}" method="POST" style="display: inline;">
+                            {{ method_field('POST') }}
+                            {{ csrf_field() }}
+                            <input type="hidden" name="page" value="{{$page_pre}}">
+                            <button type="submit" class="btn btn-lg btn-info">上一页</button>
+                        </form>
+                        @endif
+                        <form action="{{ url('admin/article/pageGet') }}" method="POST" style="display: inline;">
+                            {{ method_field('POST') }}
+                            {{ csrf_field() }}
+                            <input type="hidden" name="page" value="{{$page_next}}">
+                            <button type="submit" class="btn btn-lg btn-info">下一页</button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
         </div>

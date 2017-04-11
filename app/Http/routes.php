@@ -21,6 +21,7 @@ Route::group(['middleware' => 'auth', 'namespace' => 'Admin', 'prefix' => 'admin
     Route::get('/', 'HomeController@index');
     Route::resource('article', 'ArticleController');
     Route::post('article/send', 'ArticleController@send');
+    Route::post('article/pageGet', 'ArticleController@pageGet');
 });
 
 Route::get('/', 'HomeController@index');
