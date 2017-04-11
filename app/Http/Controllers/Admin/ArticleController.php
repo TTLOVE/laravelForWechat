@@ -11,7 +11,14 @@ use Ixudra\Curl\Facades\Curl;
 
 class ArticleController extends Controller
 {
-    const CHANNEL_ID = 11;
+    /**
+        * for test
+     */
+    //const CHANNEL_ID = 11;
+    /**
+        * for online
+     */
+    const CHANNEL_ID = 1;
 
     /**
         * 文章列表
@@ -95,6 +102,9 @@ class ArticleController extends Controller
             ],
             "msgtype" => "mpnews"
         ];
+        echo "\n\n";
+        var_export($postData);
+        echo "\n\n";
         $response = Curl::to($sendUrl)
             ->withData($postData)
             ->asJson()
