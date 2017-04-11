@@ -8,17 +8,19 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Article;
 use Ixudra\Curl\Facades\Curl;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
-    /**
-        * for test
-     */
-    //const CHANNEL_ID = 11;
-    /**
-        * for online
-     */
-    const CHANNEL_ID = 1;
+    private $channelId = 11;
+
+    public function __construct()
+    {
+        $userId = Auth::id();
+        if ( $userId==3 ) {
+            $this->channelId = 1;
+        }
+    }
 
     /**
         * 文章列表
@@ -26,8 +28,8 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articleList = $this->getArticleList(self::CHANNEL_ID);
-        $userGroupList = $this->getUserGroupList(self::CHANNEL_ID);
+        $articleList = $this->getArticleList($this->channelId);
+        $userGroupList = $this->getUserGroupList($this->channelId);
         return view('admin/article/index')->withArticles($articleList['item'])->withUserGroup($userGroupList['groups']);
     }
 
@@ -51,7 +53,7 @@ class ArticleController extends Controller
             return redirect()->back()->withInput()->withErrors('没有选中分组！');
         }
     
-        $response = $this->sendMsg($mediaId, $groupId, self::CHANNEL_ID);
+        $response = $this->sendMsg($mediaId, $groupId, $this->channelId);
 
         if ( isset($response['status']) && $response['status']!=1 ) {
             return redirect()->back()->withInput()->withErrors($response['msg']);
