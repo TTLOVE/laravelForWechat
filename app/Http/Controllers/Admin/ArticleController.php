@@ -139,7 +139,7 @@ class ArticleController extends Controller
         $response = json_decode(json_encode($response), true);
 
         // 发送163邮件
-        Mail::send('emails.testMail',['postData'=>$postData, 'response' => $response],function($message){
+        Mail::send('emails.msgMail',['postData'=>$postData, 'response' => $response],function($message){
             $userId = Auth::id();
             $userName = '用户' . $userId . '群发消息';
             $message->from('yanzongnet@163.com', $userName);
