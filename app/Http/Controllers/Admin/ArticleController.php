@@ -83,10 +83,7 @@ class ArticleController extends Controller
             return redirect()->back()->withInput()->withErrors($response['msg']);
         } else {
             if ( isset($response['errcode']) && $response['errcode']==0 ) {
-                echo "\n\n";
-                var_export($response);
-                echo "\n\n";
-                exit;
+                return view('admin/article/send')->withMediaId($mediaId)->withGroupId($groupId)->withChannelId($this->channelId)->withMsgId($response['msg_id'])->withMsgDataId($response['msg_data_id']);
             } else {
                 return redirect()->back()->withInput()->withErrors($response['errmsg']);
             }

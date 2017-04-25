@@ -14,21 +14,20 @@
                     @endif
 
                     <hr>
+                    <h1>发送成功</h1>
+                    <a href="{{ url('admin/article') }}"><button type="submit" class="btn btn-lg btn-info">返回列表</button></a>
                     <div class="article">
-                        <h4>选择发送分组</h4>
+                        <h4>发送分组id：{{$group_id}}</h4>
                     </div>
-                    <form action="{{ url('admin/article/send') }}" method="POST" style="display: inline;">
-                        {{ method_field('POST') }}
-                        {{ csrf_field() }}
-                        <select name="group_id" class="selectpicker">
-                            @foreach ($user_group as $user)
-                                <option value="{{ $user['id'] }}">{{ $user['name'] }}</option>
-                            @endforeach
-                        </select>
-                        
-                        <input type="hidden" name="media_id" value="{{$media_id}}">
-                        <button type="submit" class="btn btn-lg btn-info">发送</button>
-                    </form>
+                    <div class="article">
+                        <h4>消息media　id：{{$media_id}}</h4>
+                    </div>
+                    <div class="article">
+                        <h4>返回数据-消息id：{{$msg_id}}</h4>
+                    </div>
+                    <div class="article">
+                        <h4>返回数据-消息数据id：{{$msg_data_id}}</h4>
+                    </div>
                 </div>
             </div>
         </div>
