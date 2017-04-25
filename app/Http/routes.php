@@ -26,6 +26,7 @@ Route::group(['middleware' => 'auth', 'namespace' => 'Admin', 'prefix' => 'admin
 
 Route::get('/', 'HomeController@index');
 
+Route::get('forMail', 'HomeController@sendMail');
 
 Route::get('/now', function () {
     return date("Y-m-d H:i:s");

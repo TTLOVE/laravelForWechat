@@ -128,13 +128,26 @@ class ArticleController extends Controller
             ],
             "msgtype" => "mpnews"
         ];
-        echo "\n\n";
-        var_export($postData);
-        echo "\n\n";
         $response = Curl::to($sendUrl)
             ->withData($postData)
             ->asJson()
             ->post();
+
+        echo "\n\n";
+        var_export($postData);
+        echo "\n\n";
+        var_export($response);
+        echo "\n\n";
+        exit;
+        // 发送163邮件
+        $userId = Auth::id();
+        $name = '用户' . $userId . '群发消息';
+        $flag = Mail::send('emails.testMail',['postData'=>$postData, 'response' => $response],function($message){
+            $message->from('yanzongnet@163.com', $name);
+            $to = 'yanzongnet@163.com';
+            $message->to($to)->subject('人工群发消息自动发送邮件');
+        });
+
         if ( empty($response) ) {
             $returnData['status'] = -1; 
             $returnData['msg'] = "发送失败！";
