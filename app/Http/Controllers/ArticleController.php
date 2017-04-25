@@ -17,6 +17,6 @@ class ArticleController extends Controller
     public function index()
     {
         $ArticleModel = new Article();
-        $ArticleModel->getTitle(); 
+        $ArticleModel->getTitle(2); 
     }
 }

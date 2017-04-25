@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Article extends Model
 {
-    public function getTitle()
+    public function getTitle($id)
     {
-        $article = Article::find(2);
+        $article = Article::find($id);
 
         echo $article->title;
     }
