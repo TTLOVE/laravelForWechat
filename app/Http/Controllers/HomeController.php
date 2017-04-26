@@ -30,6 +30,18 @@ class HomeController extends Controller
     }
 
     /**
+        * 测试链接参数验证只有英文
+        *
+        * @param $name 传输的参数
+        *
+        * @return 
+     */
+    public function home($name)
+    {
+        echo $name;
+    }
+
+    /**
         * 发送邮件
         *
         * @return 

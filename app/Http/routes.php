@@ -29,8 +29,11 @@ Route::get('/', 'HomeController@index');
 Route::get('forMailQQ', 'HomeController@sendMailForQQ');
 Route::get('forMail163', 'HomeController@sendMailFor163');
 
-Route::get('/now', function () {
-    return date("Y-m-d H:i:s");
-});
-
 Route::resource('article', 'ArticleController');
+
+Route::resource('post', 'PostController');
+
+Route::get('home/{name}', 'HomeController@home');
+
+Route::controller('request','RequestController');
+
