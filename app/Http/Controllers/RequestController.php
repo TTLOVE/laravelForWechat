@@ -109,10 +109,22 @@ class RequestController extends Controller
         $destPath = '/tmp/aa';
         if(!file_exists($destPath))
             mkdir($destPath,0755,true);
-        $filename = $file->getClientOriginalName();
+        //$filename = $file->getClientOriginalName();
+        $filename = time() . ".png";
         if(!$file->move($destPath,$filename)){
             exit('保存文件失败！');
         }
         exit('文件上传成功！'); 
+    }
+
+    public function getJson()
+    {
+        return response()->json(['name'=>'LaravelAcademy','passwd'=>'LaravelAcademy.org'])->setCallback(request()->input('callback'));
+    }
+
+    public function getDownloadByUrl(Request $request)
+    {
+        $path = $request->input('path', '1493273794.png');
+        return response()->download('/tmp/aa/' . $path, '我的.png'); 
     }
 }

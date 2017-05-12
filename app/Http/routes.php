@@ -37,3 +37,4 @@ Route::get('home/{name}', 'HomeController@home');
 
 Route::controller('request','RequestController');
 
+Route::resource('test','TestController');
