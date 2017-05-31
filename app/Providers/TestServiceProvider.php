@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Services\TestService;
+use App\Facades\Test;
 
 class TestServiceProvider extends ServiceProvider
 {
@@ -26,7 +27,8 @@ class TestServiceProvider extends ServiceProvider
     {
         //使用singleton绑定单例
         $this->app->singleton('test',function(){
-            return new TestService();
+            //return new TestService();
+            return new Test;
         });
 
         //使用bind绑定实例到接口以便依赖注入

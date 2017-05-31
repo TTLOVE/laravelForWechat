@@ -35,6 +35,7 @@
             </li>
             @endforeach
         </ul>
+        {!! $articles->render() !!}
     </div>
 
 </body>

@@ -25,6 +25,8 @@ Route::group(['middleware' => 'auth', 'namespace' => 'Admin', 'prefix' => 'admin
 });
 
 Route::get('/', 'HomeController@index');
+Route::get('home', 'HomeController@index');
+Route::get('log', 'HomeController@log');
 
 Route::get('forMailQQ', 'HomeController@sendMailForQQ');
 Route::get('forMail163', 'HomeController@sendMailFor163');
@@ -32,6 +34,8 @@ Route::get('forMail163', 'HomeController@sendMailFor163');
 Route::resource('article', 'ArticleController');
 
 Route::resource('post', 'PostController');
+
+Route::resource('redis', 'RedisController');
 
 Route::get('home/{name}', 'HomeController@home');
 

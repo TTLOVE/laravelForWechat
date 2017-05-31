@@ -158,6 +158,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\TestServiceProvider::class,
         App\Providers\TestaServiceProvider::class,
+        Zyz\Contact\ContactServiceProvider::class,
 
     ],
 
@@ -205,6 +206,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Curl' => Ixudra\Curl\Facades\Curl::class,
+        'TTest' => App\Facades\TestClass::class,
 
     ],
 
