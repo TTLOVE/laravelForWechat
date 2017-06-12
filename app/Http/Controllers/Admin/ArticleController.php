@@ -18,7 +18,7 @@ class ArticleController extends Controller
     public function __construct()
     {
         $userId = Auth::id();
-        if ( $userId==3 ) {
+        if ( $userId==2 ) {
             $this->channelId = 1;
         }
     }
@@ -138,13 +138,21 @@ class ArticleController extends Controller
         }
         $response = json_decode(json_encode($response), true);
 
+        $userGroupList = $this->getUserGroupList($this->channelId);
+        foreach ($userGroupList['groups'] as $group) {
+            if ( $group['id']==$groupId ) {
+                $postData['group_name'] = $group['name'];
+                break; 
+            }
+        }
+
         // 发送163邮件
         Mail::send('emails.msgMail',['postData'=>$postData, 'response' => $response],function($message){
             $userId = Auth::id();
             $userName = '用户' . $userId . '群发消息';
             $message->from('yanzongnet@163.com', $userName);
             $to = 'yanzongnet@163.com';
-            $message->to($to)->subject('人工群发消息自动发送邮件');
+            $message->to($to)->subject('群发消息用户' . $userId . '自动发送邮件');
         });
 
         return $response;
