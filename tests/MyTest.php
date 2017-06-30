@@ -13,7 +13,9 @@ class MyTest extends TestCase
      */
     public function testExample()
     {
-        $a = 3;
+        $a = 2;
         $b = 2 + 1;
+        $this->assertEquals($a, $b);
+        return $stack;
     }
 }

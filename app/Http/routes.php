@@ -42,3 +42,7 @@ Route::get('home/{name}', 'HomeController@home');
 Route::controller('request','RequestController');
 
 Route::resource('test','TestController');
+
+Route::get('aa', function() {
+    return view('welcome');
+});

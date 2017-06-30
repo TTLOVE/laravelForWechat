@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Http\Response;
+use Storage;
+use App\Jobs\SendRemindEmail;
 
 class RequestController extends Controller
 {
@@ -105,16 +107,28 @@ class RequestController extends Controller
         if(!$file->isValid()){
             exit('文件上传出错！');
         }
-        //$destPath = realpath(public_path('images'));
-        $destPath = '/tmp/aa';
-        if(!file_exists($destPath))
-            mkdir($destPath,0755,true);
-        //$filename = $file->getClientOriginalName();
-        $filename = time() . ".png";
-        if(!$file->move($destPath,$filename)){
+
+        $filename = time()  . '.' . $file->getClientOriginalExtension();
+        $savePath = 'test/' . $filename ;
+        $bytes = Storage::put(
+            $savePath,
+            file_get_contents($file->getRealPath())
+        );
+        if(!Storage::exists($savePath)){
             exit('保存文件失败！');
         }
-        exit('文件上传成功！'); 
+        header("Content-Type: ".Storage::mimeType($savePath));
+        echo Storage::get($savePath);
+
+        //$destPath = '/tmp/aa';
+        //if(!file_exists($destPath))
+            //mkdir($destPath,0755,true);
+        //$filename = time()  . '.' . $file->getClientOriginalExtension();
+        //if(!$file->move($destPath,$filename)){
+            //exit('保存文件失败！');
+        //}
+        //header('Content-type: image/jpg');
+        //echo  file_get_contents($destPath . '/' . $filename);;
     }
 
     public function getJson()
@@ -126,5 +140,33 @@ class RequestController extends Controller
     {
         $path = $request->input('path', '1493273794.png');
         return response()->download('/tmp/aa/' . $path, '我的.png'); 
+    }
+
+    public function getJobSendEmail()
+    {
+        $job = (new SendRemindEmail())->delay(10);
+        $this->dispatch($job);
+    }
+
+    public function getSession()
+    {
+        //session(['site'=>'LaravelAcademy.org']);
+        session(['site.xxx.aa'=>'LaravelAcademy.org']);
+        $site = session('site.xxx');
+        dd($site);
+    }
+
+    public function getRequestSession(Request $request)
+    {
+        $request->session()->put('site.xx', 'll.com');
+        if ( $request->session()->has('site.xx') ) {
+            $site = $request->session()->get('site');
+            dd($site);
+        } else {
+            $empty = [
+                'null' => 111
+            ];
+            dd($empty);
+        }
     }
 }
