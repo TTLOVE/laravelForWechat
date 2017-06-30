@@ -13,7 +13,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        //视图间共享数据
+        view()->share('siteName','ll.com');
+
+        //视图Composer
+        view()->composer('home',function($view){
+            $view->with('user',array('name'=>'test','avatar'=>'/path/to/test.jpg'));
+        });
     }
 
     /**

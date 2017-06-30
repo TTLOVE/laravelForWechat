@@ -24,7 +24,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        //
+        // all the pattern of name has the limit
+        $router->pattern('name','[A-Za-z]+');
 
         parent::boot($router);
     }
