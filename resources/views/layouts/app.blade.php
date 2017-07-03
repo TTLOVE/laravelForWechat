@@ -8,10 +8,8 @@
     <title>微信管理后台</title>
 
     <link href="//cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://silviomoreto.github.io/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
     <script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
     <script src="//cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="https://silviomoreto.github.io/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 </head>
 <body id="app-layout">
     <nav class="navbar navbar-default navbar-static-top">
