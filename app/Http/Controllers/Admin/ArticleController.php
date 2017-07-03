@@ -18,7 +18,7 @@ class ArticleController extends Controller
     public function __construct()
     {
         $userId = Auth::id();
-        if ( $userId==3 ) {
+        if ( $userId==2 ) {
             $this->channelId = 1;
         }
     }
