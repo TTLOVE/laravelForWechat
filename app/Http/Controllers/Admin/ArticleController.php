@@ -72,19 +72,20 @@ class ArticleController extends Controller
             'group_id' => 'required',
         ]);
         $mediaId = $request->get('media_id');
-        $groupId = $request->get('group_id');
+        $groupIdArr = $request->get('group_id');
 
-        if ( empty($groupId) ) {
+        if ( empty($groupIdArr) ) {
             return redirect()->back()->withInput()->withErrors('没有选中分组！');
         }
     
-        $response = $this->sendMsg($mediaId, $groupId, $this->channelId);
+        $response = $this->sendMsg($mediaId, $groupIdArr, $this->channelId);
 
         if ( isset($response['status']) && $response['status']!=1 ) {
             return redirect()->back()->withInput()->withErrors($response['msg']);
         } else {
             if ( isset($response['errcode']) && $response['errcode']==0 ) {
-                return view('admin/article/send')->withMediaId($mediaId)->withGroupId($groupId)->withChannelId($this->channelId)->withMsgId($response['msg_id'])->withMsgDataId($response['msg_data_id']);
+                $groupIdString = implode(",", $groupIdArr);
+                return view('admin/article/send')->withMediaId($mediaId)->withGroupId($groupIdString)->withChannelId($this->channelId)->withMsgId($response['msg_id'])->withMsgDataId($response['msg_data_id']);
             } else {
                 return redirect()->back()->withInput()->withErrors($response['errmsg']);
             }
@@ -95,12 +96,12 @@ class ArticleController extends Controller
         * 根据媒体id,群组id,渠道id发送消息
         *
         * @param $mediaId 媒体id
-        * @param $groupId 群组id
+        * @param $groupIdArr 群组id数组
         * @param $channelId 渠道id
         *
         * @return array
      */
-    private function sendMsg($mediaId, $groupId, $channelId)
+    private function sendMsg($mediaId, $groupIdArr, $channelId)
     {
         $wechatToken = $this->getWechatToken($channelId);
         $returnData = array(
@@ -115,17 +116,49 @@ class ArticleController extends Controller
 
         // 发送消息
         $sendUrl = 'https://api.weixin.qq.com/cgi-bin/message/mass/sendall?access_token=' . $wechatToken;
-        $postData = [
-            "filter" => [
-                "is_to_all" => false,
-                "group_id" => $groupId
-            ],
-            "send_ignore_reprint" => 1,
-            "mpnews" => [
-                "media_id" => $mediaId
-            ],
-            "msgtype" => "mpnews"
-        ];
+        if ( in_array('all', $groupIdArr) ) {
+            $postData = [
+                "filter" => [
+                    "is_to_all" => true,
+                    "group_id" => 'all'
+                ],
+                "send_ignore_reprint" => 1,
+                "mpnews" => [
+                    "media_id" => $mediaId
+                ],
+                "msgtype" => "mpnews"
+            ];
+            $response = $this->sendMsgAndEmail($sendUrl, $postData);
+        } else {
+            foreach ($groupIdArr as $groupId) {
+                $postData = [
+                    "filter" => [
+                        "is_to_all" => false,
+                        "group_id" => $groupId
+                    ],
+                    "send_ignore_reprint" => 1,
+                    "mpnews" => [
+                        "media_id" => $mediaId
+                    ],
+                    "msgtype" => "mpnews"
+                ];
+                $response = $this->sendMsgAndEmail($sendUrl, $postData);
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+        * 群发消息并发送邮件给我
+        *
+        * @param $sendUrl 发送消息的链接
+        * @param $postData 传输数据
+        *
+        * @return array
+     */
+    private function sendMsgAndEmail($sendUrl, $postData)
+    {
         $response = Curl::to($sendUrl)
             ->withData($postData)
             ->asJson()
@@ -136,6 +169,7 @@ class ArticleController extends Controller
             $returnData['msg'] = "发送失败！";
             return $returnData;
         }
+
         $response = json_decode(json_encode($response), true);
 
         // 发送163邮件
@@ -179,6 +213,12 @@ class ArticleController extends Controller
             return false;
         }
         $response = json_decode($response, true);
+        $allSendGroup = [
+            'id' => 'all',
+            'name' => '全部发送',
+            'count' => 0
+        ];
+        array_unshift($response['groups'], $allSendGroup);
         return $response;
     }
 
