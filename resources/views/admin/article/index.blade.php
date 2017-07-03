@@ -17,13 +17,18 @@
                         <hr>
                         <div class="article">
                             @foreach ($article['content']['news_item'] as $item)
-                                <h4>{{ $item['title'] }}</h4>
+                                <h4>
+                                    {{ $item['title'] }}
+                                </h4>
                             @endforeach
+                        </div>
+                        <div class="article">
+                            <p>最后更新时间:{{date("Y-m-d H:i:s",$article['update_time'])}}</p>
                         </div>
                         <form action="{{ url('admin/article/send') }}" method="POST" style="display: inline;">
                             {{ method_field('POST') }}
                             {{ csrf_field() }}
-                            <select name="group_id" class="selectpicker" data-style="btn-warning">
+                            <select name="group_id[]" class="selectpicker" data-style="btn-warning" multiple>
                                 @foreach ($user_group as $user)
                                     <option value="{{ $user['id'] }}">{{ $user['name'] }}</option>
                                 @endforeach
