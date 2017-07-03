@@ -172,8 +172,18 @@ class ArticleController extends Controller
 
         $response = json_decode(json_encode($response), true);
 
+        // 获取用户分组信息
+        $groupName = '';
+        $userGroupList = $this->getUserGroupList($this->channelId);
+        foreach ($userGroupList['groups'] as $group) {
+            if ( $group['id']==$postData['filter']['group_id'] ) {
+                $groupName = $group['name'];
+                break;
+            }
+        }
+
         // 发送163邮件
-        Mail::send('emails.msgMail',['postData'=>$postData, 'response' => $response],function($message){
+        Mail::send('emails.msgMail',['postData'=>$postData, 'response' => $response, 'groupName' => $groupName],function($message){
             $userId = Auth::id();
             $userName = '用户' . $userId . '群发消息';
             $message->from('yanzongnet@163.com', $userName);

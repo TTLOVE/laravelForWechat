@@ -15,6 +15,9 @@
                         <h4>发送分组id：{{$postData['filter']['group_id']}}</h4>
                     </div>                    
                     <div class="article">
+                        <h4>消息分组：{{$groupName}}</h4>
+                    </div>             
+                    <div class="article">
                         <h4>消息media　id：{{$postData['mpnews']['media_id']}}</h4>
                     </div>             
                     @if ($response['errcode']==0)
