@@ -282,7 +282,7 @@ class ArticleController extends Controller
      */
     private function getWechatToken($channelId)
     {
-        $response = Curl::to('http://tpassport.lifeq.com.cn/pass/auth/channel/token')
+        $response = Curl::to('https://tpassport.lifeq.com.cn/pass/auth/channel/token')
             ->withData( array( 'channelId' => $channelId ) )
             ->get();
         if ( empty($response) ) {
