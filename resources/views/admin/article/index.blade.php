@@ -25,7 +25,7 @@
                         <div class="article">
                             <p>最后更新时间:{{date("Y-m-d H:i:s",$article['update_time'])}}</p>
                         </div>
-                        <form action="{{ url('admin/article/send') }}" method="POST" style="display: inline;">
+                        <form action="{{ url('admin/article/send') }}" method="POST" onsubmit="return checkForm()" style="display: inline;">
                             {{ method_field('POST') }}
                             {{ csrf_field() }}
                             <select name="group_id[]" class="selectpicker" data-style="btn-warning" multiple>
@@ -62,4 +62,12 @@
         </div>
    </div>
 </div>
+<script type="text/javascript">
+    function checkForm() {
+        if (window.confirm("是否确认发送对应群组消息?")) {
+            return true;
+        }
+        return false;
+    }
+</script>
 @endsection
