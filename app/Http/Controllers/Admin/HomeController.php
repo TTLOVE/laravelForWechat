@@ -13,4 +13,9 @@ class HomeController extends Controller
     {
         return view('admin/home');
     }
+
+    public function goToLogin()
+    {
+        return redirect('login');
+    }
 }

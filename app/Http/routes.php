@@ -24,7 +24,7 @@ Route::group(['middleware' => 'auth', 'namespace' => 'Admin', 'prefix' => 'admin
     Route::post('article/pageGet', 'ArticleController@pageGet');
 });
 
-Route::get('/', 'HomeController@index');
+Route::get('/', 'Admin\HomeController@goToLogin');
 Route::get('home', 'HomeController@index');
 Route::get('log', 'HomeController@log');
 
