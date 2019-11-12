@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Ixudra\Curl\Facades\Curl;
+use Cache;
 
 class ArticleController extends Controller
 {
@@ -101,7 +102,7 @@ class ArticleController extends Controller
     {
         $wechatToken = $this->getWechatToken($channelId);
         if (empty($wechatToken)) {
-            throw new Exception("获取 token 失败", 1);
+            throw new \Exception("获取 token 失败", 1);
         }
 
         // 发送消息
@@ -155,7 +156,7 @@ class ArticleController extends Controller
             ->post();
 
         if (empty($response)) {
-            throw new Exception("发送失败", 1);
+            throw new \Exception("发送失败", 1);
         }
 
         return json_decode(json_encode($response), true);
@@ -172,7 +173,7 @@ class ArticleController extends Controller
     {
         $wechatToken = $this->getWechatToken($channelId);
         if (empty($wechatToken)) {
-            throw new Exception("获取 token 失败", 1);
+            throw new \Exception("获取 token 失败", 1);
         }
 
         // 获取列表
@@ -180,7 +181,7 @@ class ArticleController extends Controller
         $response = Curl::to($listUrl)
             ->get();
         if (empty($response)) {
-            throw new Exception("获取  分组信息 失败", 1);
+            throw new \Exception("获取  分组信息 失败", 1);
         }
         $response     = json_decode($response, true);
         $allSendGroup = [
@@ -205,7 +206,7 @@ class ArticleController extends Controller
     {
         $wechatToken = $this->getWechatToken($channelId);
         if (empty($wechatToken)) {
-            throw new Exception("获取 token 失败", 1);
+            throw new \Exception("获取 token 失败", 1);
         }
 
         // 获取列表
@@ -220,7 +221,7 @@ class ArticleController extends Controller
             ->asJson()
             ->post();
         if (empty($response)) {
-            throw new Exception("获取 文章列表 失败", 1);
+            throw new \Exception("获取 文章列表 失败", 1);
         }
         $response = json_decode(json_encode($response), true);
         return $response;
@@ -235,30 +236,24 @@ class ArticleController extends Controller
      */
     private function getWechatToken($channelId)
     {
-        $token = \DB::table('tokens')->where('expire_time', '>', time())
-            ->orderBy('id', 'desc')
-            ->first();
+        $token = Cache::get('wechat_token');
+        $token = @json_decode($token, true);
 
-        if (empty($token)) {
+        if (empty($token) || $token['expire_time']<time()) {
             $response = Curl::to('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx987894680b1d2f52&secret=ed85577df79c9c6003702b220f9a202a')
                 ->get();
             $response = @json_decode($response, true);
             if (empty($response) || !isset($response['access_token'])) {
-                throw new Exception("获取token 失败", 1);
+                throw new \Exception("获取token 失败", 1);
             }
 
-            // 插入信息
             $token = [
                 'token'       => $response['access_token'],
                 'expire_time' => time() + 7000,
             ];
-            \DB::table('tokens')->insert($token);
-
-            $token = \DB::table('tokens')->where('expire_time', '>', time())
-                ->orderBy('id', 'desc')
-                ->first();
+            Cache::put('wechat_token', json_encode($token));
         }
 
-        return $token->token;
+        return $token['token'];
     }
 }
